@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
         // estilos a crear son: ListContainer, listTitle, listItemContainer, listItemTitle
         listContainer: {
             marginHorizontal:20,
+            scrollbarindicator:false,
         },
         listTitle: {
             fontSize: 18,

@@ -64,6 +64,47 @@ export const styles = StyleSheet.create({
             justifyContent: 'center',
         },
 
+        // ESTILOS DE LOS MODALES PARA BORRAR LAS TAREAS
+
+        modalContainer: {
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 50,
+          paddingVertical: 20,
+          marginHorizontal: 80,
+
+        },
+        modalTitle: {
+          fontSize: 20,
+          fontWight: 'bold',
+          marginBottom: 10,
+
+        },
+        modalDetailContainer: {  //tarea seleccionada
+          paddingVertical: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        modalDetailText: {
+          fontSize: 14,
+          color: '#212121',
+        },
+        selectedTask: {
+          fontSize: 14,
+          color: '#212121',
+          fontWeight: 'bold',
+          paddingVertical: 20,
+
+        },
+        modalButtonContainer: {
+          width: '70%', //aquí ocupó un background color para ver que los botones ocupaban poco espacio por defecto
+          flexDirection: 'row', //poner los botones uno al lado del otro
+          justifyContent: 'space-around', //para que se separen los botones
+          marginHorizontal: 20, 
+          
+        },
+
     
         
       }

@@ -2,13 +2,14 @@
 //el de arriba era cuando el style.js estaba abajo mezclado
 import { useState } from 'react'; 
 //importamos el useState para hacer el hook
-import {Text, View, TextInput, Button, FlatList } from 'react-native';
+import {Text, View, TextInput, Button, FlatList, Modal, TouchableOpacity } from 'react-native';
 import { styles } from './styles';
 
 export default function App() {
-  const [task, setTask] = useState('');
-  //declaramos un string. setTask se antepone el set porque la variable es Tarea de la lista Todo
+  const [task, setTask] = useState(''); //declaramos un string. setTask se antepone el set porque la variable es Tarea de la lista Todo
   const [taskList, setTaskList] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false); // modal, inicialmente false porque no es visible
+  const [selectedTask, setSelectedTask] = useState(null); //modal, sevirá para borrar
 
   const onHandleTask = () => { //este lo accionamos al pulsar ADD, linea 26 // Abajo invierte para que el orden que se agregan las tarjetas, el mathrandom valor y despues el previaTaskList
     setTaskList ((prevtaskList) => [...prevtaskList, {id: Math.random().toString(), value: task}]) //aquí está entre corchetes, por eso arriba igual
@@ -20,13 +21,27 @@ export default function App() {
     return colors[Math.floor(Math.random() * colors.length)]; //con esto la lista tiene un color aleatorio
   }
   //ESTA VARIABLE ES DEL FLATLIST
-  
-  const renderItem = ({item}) => (
-    <View style={[styles.listItemContainer]}> 
+  const onHandleSelected = (item) => {
+    setSelectedTask(item); //setear el item que yo he clickeado
+    setModalVisible(!modalVisible); // hacer aparecer el modal al seleccionar, invertimos el estado inicial, si es false, se vuelve verdadeero
+  }
+
+  const renderItem = ({item}) => ( //el View reemplazado por TouchableOpacity, ahora se le puede poner onPress
+    <TouchableOpacity style={[styles.listItemContainer]} onPress={() => onHandleSelected(item)}>   
       <Text style={styles.listItemTitle}>'{item.value}'</Text>
-    </View>
+    </TouchableOpacity>
   )
   
+  const onHandleCancel = () => {  
+    setModalVisible(!modalVisible); //puedo poner inverso ! de modalvisible, o false
+  }
+
+  const onHandleDeleteItem = () => {
+    setTaskList((prevTaskList) => prevTaskList.filter((item) => item.id !== selectedTask.id)); //quiero filtrar los elementos que son diferentes al selectedList
+    setModalVisible(!modalVisible);
+  }
+
+
   
   return (
     <View style={styles.container}>
@@ -35,7 +50,9 @@ export default function App() {
         style={styles.input}
         value={task}
         placeholder="Escribe tu tarea"
+        
         onChangeText={text => setTask(text)} //esto me permite que el texto cambie, o va  quedar seteado con el texto ue pille (que es nada, escribes y lo borra sin esto)
+        
         /> 
         <Button disabled={!task} title='Add' color='#2D2A32' onPress={onHandleTask}/>
         {/* // el botón en react tiene que tener titulo, y color.  */}
@@ -52,7 +69,32 @@ export default function App() {
           renderItem={renderItem} //que va a renderizar? lo de arriba const renderItem
           keyExtractor={item => item.id} //no va un toString() porque ya es un string
           />
-        
+          
+          {/* animationtype existen 3, none, slide y fade */}
+          
+          <Modal visible={modalVisible} animationType='slide' transparent> 
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Detalle Tarea</Text>
+            
+            <View style={styles.modalDetailContainer}>
+              <Text style={styles.modalDetailText}>¿Esta seguro de eliminar esta tarea?</Text>
+              <Text style={styles.selectedTask}>{selectedTask?.value}</Text> 
+            </View>
+            <View style={styles.modalButtonContainer}>
+              <Button
+                title='Cancelar'
+                color='#9A848F'
+                onPress={onHandleCancel} //botón para cancelar el borrar
+                />
+              <Button
+                title='Borrar'
+                color='red'
+                onPress={onHandleDeleteItem}
+                />
+            </View>
+            </View>
+          </Modal>
+         
     </View>
       
     

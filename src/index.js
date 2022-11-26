@@ -3,7 +3,8 @@
 import { useState } from 'react'; 
 //importamos el useState para hacer el hook
 import {Text, View, TextInput, Button, FlatList, Modal, TouchableOpacity } from 'react-native';
-import { styles } from './styles';
+import { styles } from '../styles';
+import { AddItem, TaskItem } from './components/index';
 
 export default function App() {
   const [task, setTask] = useState(''); //declaramos un string. setTask se antepone el set porque la variable es Tarea de la lista Todo
@@ -27,9 +28,7 @@ export default function App() {
   }
 
   const renderItem = ({item}) => ( //el View reemplazado por TouchableOpacity, ahora se le puede poner onPress
-    <TouchableOpacity style={[styles.listItemContainer]} onPress={() => onHandleSelected(item)}>   
-      <Text style={styles.listItemTitle}>'{item.value}'</Text>
-    </TouchableOpacity>
+    <TaskItem item={item} onHandleSelected={onHandleSelected} />
   )
   
   const onHandleCancel = () => {  
@@ -41,23 +40,12 @@ export default function App() {
     setModalVisible(!modalVisible);
   }
 
-
+  const onHandleChange = (text) => setTask(text);
   
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput  //AQUÍ PRIMER HOOK USESTATE!!!!!
-        style={styles.input}
-        value={task}
-        placeholder="Escribe tu tarea"
-        
-        onChangeText={text => setTask(text)} //esto me permite que el texto cambie, o va  quedar seteado con el texto ue pille (que es nada, escribes y lo borra sin esto)
-        
-        /> 
-        <Button disabled={!task} title='Add' color='#2D2A32' onPress={onHandleTask}/>
-        {/* // el botón en react tiene que tener titulo, y color.  */}
-        {/* onPress null es loq ue se ejecuta una vez que se pulsa */}
-      </View> 
+      <AddItem task={task} onHandleTask={onHandleTask} onHandleChange={onHandleChange} //importado de components/add-item
+      /> 
 
       <View style={styles.listContainer}>
           <Text style={styles.listTitle}>Todo List</Text>
